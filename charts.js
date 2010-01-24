@@ -176,6 +176,10 @@ CmdUtils.CreateCommand({
  
   preview: function(pblock, args) {
  
+    if (!args.object.html) {
+      this.previewDefault(pblock);
+      return;
+    }
     var img = dataToChart( args );
  
  
