@@ -173,30 +173,6 @@ CmdUtils.CreateCommand({
   homepage: "http://earth2marsh.com/ubiquity/",
   author: {name: "Marsh Gardiner", email: "ubiquity@earth2marsh.com"},
   license: "MPL",
-  
-  _dataToPieChart: function( args ) {
-    var data = graphObj(selectionToArray( args.object.html ));
- 
-    if( !data ) return null;
-    
-    data.labelquery = formatLabels(data.labels);
-    // pie charts only handle values up to 100, so scale them!
-    data.valuequery = formatValues(scaleTo100(data.values, data.max));
- 
-    var graphHeight = 200;
- 
-    //if (!isNaN(parseInt(args.height.text))) graphHeight = args.height.text;
-    if (graphHeight > 387) graphHeight = 387;
- 
-    var graphWidth = graphHeight *2;
- 
-    //if (!isNaN(parseInt(args.width.text))) graphWidth = args.width.text;
-    if (graphWidth > 774) graphWidth = 774;
- 
-    img = "<img src='http://chart.apis.google.com/chart?cht=pc&chs="+graphWidth+"x"+graphHeight+"&chl="+data.labelquery+"&chd=t:"+data.valuequery+"'/>";
-    return img;
- 
-  },
  
   preview: function(pblock, args) {
  
