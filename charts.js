@@ -6,6 +6,9 @@ var colors = "&chco=94B6D2,D6AA20,759E00,D8773A,007777,B53A3A,713871,4A6E21,9790
     //"&chco=7979B2,C6C6FF,E0E0FF,B2A567,FFF5C6";
     noun_type_chart = new CmdUtils.NounType( "chart",
       ["pie", "bar", "line", "tline"], "pie"
+    ),
+    noun_type_width_height = new CmdUtils.NounType( "width[xheight]",
+      /^\d+(x\d+)?$/, "400x200"
     );
  
 function selectionToArray( string ) {
@@ -127,14 +130,12 @@ function  dataToChart( args ) {
   }
   data.valuequery = formatValues(data.values);
  
-  var graphHeight = 200;
+  [ graphWidth, graphHeight ] = args.modifier.text.split("x");
  
-  //if (!isNaN(parseInt(args.height.text))) graphHeight = args.height.text;
+  var graphWidth = graphWidth || 400,
+      graphHeight = graphHeight || graphWidth /2;
+ 
   if (graphHeight > 387) graphHeight = 387;
- 
-  var graphWidth = graphHeight *2;
- 
-  //if (!isNaN(parseInt(args.width.text))) graphWidth = args.width.text;
   if (graphWidth > 774) graphWidth = 774;
  
   if ( args.format.text == "bar" ) {
@@ -165,8 +166,8 @@ CmdUtils.CreateCommand({
   names: ["chart"],
   arguments: [ {role: "object", nountype: noun_arb_text, label: "Column of labels and column(s) of values"},
                {role: "format", nountype: noun_type_chart},
-               {role: "height", nountype: noun_type_number},
-               {role: "width", nountype: noun_type_number} ],
+               {role: "modifier", nountype: noun_type_width_height}
+             ],
   icon: "chrome://ubiquity/skin/icons/calculator.png",
   description: "Turn numeric data into charts using the Google Charts API.",
   help: "Select a table. Chart types supported: pie, bar, line and tline(transposed line graph)",
