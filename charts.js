@@ -30,6 +30,37 @@ function selectionToArray( string ) {
   
   return tableData;
 }
+
+function getTable(selection){
+  var table = {
+    firstrow: selection.getRangeAt(0).startContainer,
+    lastrow: selection.getRangeAt(selection.rangeCount-1).endContainer
+  };
+  // for single (non-ctrl) selections
+  if (selection.rangeCount == 1)
+    table = {
+      firstrow: jQuery(table.firstrow).closest("tr")[0],
+      lastrow: jQuery(table.lastrow).closest("tr")[0]
+    };
+  table.rows = table.lastrow.rowIndex - table.firstrow.rowIndex + 1;
+  // almost impossible to get selected columns or specific cell
+  // maybe try range.comparePoint ?
+  if (selection.rangeCount > 1)
+    table.columns = selection.rangeCount/table.rows;
+  return table;
+}
+
+function tableToArray(table){
+  if ( table.firstrow ) var info = table;
+  var table = $( table.firstrow || table ).closest("table");
+  return table.find("tr").map(
+    function(i){
+      if ( info && ( i < info.firstrow.rowIndex ||
+                     i > info.lastrow.rowIndex )) return null;
+      return $("td",this).map(
+        function(i){ return $(this).text() }
+    )})
+}
  
 function graphObj(tableData){
   var rows = tableData.length;
