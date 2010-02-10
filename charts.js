@@ -31,6 +31,10 @@ function selectionToArray( string ) {
   return tableData;
 }
 
+function num(text){
+  return +text.replace(/[^\d\.]/g,"")
+}
+
 function getTable(selection){
   var table = {
     firstrow: selection.getRangeAt(0).startContainer,
@@ -77,12 +81,12 @@ function graphObj(tableData){
     // copy the first column into a array of labels, rest into 2 dimensional array of values
   for(i=0; i<rows; i++) {
     // build labels with the first element of each row
-    data.labels[i] = tableData[i][0].replace(/%2C/g,", ").replace(/%7C/g, "|");
+    data.labels[i] = tableData[i][0];
     data.values[i] = new Array(columns-1);
     for (var j=1;j<columns; j++){
-      data.values[i][j-1] = tableData[i][j];
-      if (tableData[i][j]<data.min) data.min = parseFloat(tableData[i][j]);
-      if (tableData[i][j]>data.max) data.max = parseFloat(tableData[i][j]);
+      data.values[i][j-1] = num(tableData[i][j]);
+      if (data.values[i][j-1]<data.min) data.min = data.values[i][j-1];
+      if (data.values[i][j-1]>data.max) data.max = data.values[i][j-1];
     }
   }
  
@@ -147,7 +151,7 @@ function scaleTo100(valArray, maxVal){
 }
  
 function  dataToChart( args ) {
-  var data = graphObj(selectionToArray( args.object.html ));
+  var data = graphObj(tableToArray(getTable( CmdUtils.getWindow().getSelection() )));
  
   if( !data ) return null;
   
