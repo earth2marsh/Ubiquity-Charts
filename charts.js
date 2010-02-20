@@ -46,6 +46,7 @@ function getTable(selection){
       firstrow: jQuery(table.firstrow).closest("tr")[0],
       lastrow: jQuery(table.lastrow).closest("tr")[0]
     };
+  if (!table.lastrow) return;
   table.rows = table.lastrow.rowIndex - table.firstrow.rowIndex + 1;
   // almost impossible to get selected columns or specific cell
   // maybe try range.comparePoint ?
@@ -57,6 +58,7 @@ function getTable(selection){
 function tableToArray(table){
   if ( table.firstrow ) var info = table;
   var table = $( table.firstrow || table ).closest("table");
+  if ( table.length == 0 ) return;
   return table.find("tr").map(
     function(i){
       if ( info && ( i < info.firstrow.rowIndex ||
@@ -151,7 +153,9 @@ function scaleTo100(valArray, maxVal){
 }
  
 function  dataToChart( args ) {
-  var data = graphObj(tableToArray(getTable( CmdUtils.getWindow().getSelection() )));
+  var data, table = getTable( CmdUtils.getWindow().getSelection() );
+  if (table)
+    data = graphObj(tableToArray(table));
  
   if( !data ) return null;
   
