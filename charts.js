@@ -43,15 +43,30 @@ function getTable(selection){
   // for single (non-ctrl) selections
   if (selection.rangeCount == 1)
     table = {
-      firstrow: jQuery(table.firstrow).closest("tr")[0],
-      lastrow: jQuery(table.lastrow).closest("tr")[0]
+      firstcell: jQuery(table.firstrow).closest("td,th")[0],
+      lastcell: jQuery(table.lastrow).closest("td,th")[0],
+      firstrow: jQuery(table.firstcell).closest("tr")[0],
+      lastrow: jQuery(table.lastcell).closest("tr")[0]
     };
   if (!table.lastrow) return;
   table.rows = table.lastrow.rowIndex - table.firstrow.rowIndex + 1;
-  // almost impossible to get selected columns or specific cell
-  // maybe try range.comparePoint ?
-  if (selection.rangeCount > 1)
+  if (selection.rangeCount > 1) {
     table.columns = selection.rangeCount/table.rows;
+    var text = selection.getRangeAt(0).toString();
+    jQuery(table.firstrow.children).each(
+      function(){
+        table.firstcell = this;
+        return !!this.textContent.search(text)
+      });
+    text = selection.getRangeAt(selection.rangeCount-1).toString();
+    table.lastcell = table.lastrow.children[table.columns + table.firstcell.cellIndex - 1];
+    if (table.lastcell.textContent == text) return table;
+    jQuery(table.lastrow.children).each(
+      function(){
+        table.lastcell = this;
+        return !!this.textContent.search(text)
+      });
+  }
   return table;
 }
 
@@ -63,9 +78,13 @@ function tableToArray(table){
     function(i){
       if ( info && ( i < info.firstrow.rowIndex ||
                      i > info.lastrow.rowIndex )) return null;
-      return $("td",this).map(
-        function(i){ return $(this).text() }
-    )})
+      return $(this.children).map(
+        function(i){
+          if ( info && ( i < info.firstcell.cellIndex ||
+                     i > info.lastcell.cellIndex )) return null;
+          return $(this).text()
+        })
+    })
 }
  
 function graphObj(tableData){
