@@ -215,7 +215,7 @@ function  dataToChart( args ) {
         line:colors
       })[args.format.text];
  
-  img = "<img src='http://chart.apis.google.com/chart?cht="+urlstart+"&chs="+graphWidth+"x"+graphHeight+"&chl="+data.labelquery+"&chd=t:"+data.valuequery+"&chds="+ymin+","+data.max+"&chtxt=x,y&chxr=0,"+ymin+","+data.max+urlend+"'/>";
+  img = "<img src='http://chart.earth2marsh.apigee.com/chart?cht="+urlstart+"&chs="+graphWidth+"x"+graphHeight+"&chl="+data.labelquery+"&chd=t:"+data.valuequery+"&chds="+ymin+","+data.max+"&chtxt=x,y&chxr=0,"+ymin+","+data.max+urlend+"'/>";
   return img;
  
 }
